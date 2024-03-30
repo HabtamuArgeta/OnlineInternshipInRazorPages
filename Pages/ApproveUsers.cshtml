@@ -1,0 +1,72 @@
+﻿
+@page
+@model OnlineInternship.Pages.ApproveUsersModel
+@{
+    ViewData["Title"] = "Approve Users";
+}
+@using Microsoft.AspNetCore.Identity;
+@using OnlineInternship.Models;
+@inject UserManager<ApplicationUser> _userManager;
+
+
+<h1>@ViewData["Title"]</h1>
+
+@if (Model.AllUsers != null && Model.AllUsers.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Roles</th>
+                <th>Approved</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.AllUsers)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.FristName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>
+                        @(string.Join(", ", await _userManager.GetRolesAsync(user)))
+                    </td>
+                    <td>
+                        <input type="checkbox" id="@("approveCheckbox_" + user.Id)" @(user.Approved ? "checked" : "") onchange="approveUser('@user.Id', this.checked)" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No users found.</p>
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function approveUser(userId, approved) {
+            $.ajax({
+                type: "POST",
+                url: "/ApproveUsers?handler=ApproveUser",
+                data: { userId: userId, approved: approved },
+                success: function (response) {
+                    alert("User approval status updated successfully.");
+                },
+            failure: function (xhr, status, error) {
+                alert(error);
+                },
+            error: function (xhr, status, error) {
+                alert(error);
+                }
+            });
+        }
+    </script>

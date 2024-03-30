@@ -1,0 +1,16 @@
+﻿@page
+@model OnlineInternship.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center"> This is your profile </div>
+
+<div class="text-center">
+     <div>First Name :@Model.appUser?.FristName</div>
+     <div>Last Name :@Model.appUser?.LastName</div>
+     <div>Email :@Model.appUser?.Email</div>
+    <div>Address :@Model.appUser?.Address</div>
+    <div>Created At :@Model.appUser?.CreatedAt</div>
+</div>
+ 
